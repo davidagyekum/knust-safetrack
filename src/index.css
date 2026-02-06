@@ -1,0 +1,190 @@
+@import "tailwindcss";
+
+/* KNUST SafeTrack - Custom Design System */
+
+@theme {
+  /* KNUST Brand Colors */
+  --color-primary: #F4C430;
+  /* KNUST Gold */
+  --color-primary-dark: #D4A420;
+  /* Darker gold for hover */
+  --color-secondary: #228B22;
+  /* Forest Green */
+  --color-secondary-light: #2EA62E;
+  /* Lighter green */
+  --color-danger: #DC2626;
+  /* Emergency Red */
+  --color-danger-dark: #B91C1C;
+  /* Darker red */
+
+  /* Background Colors (Dark Theme) */
+  --color-bg-primary: #0F172A;
+  /* Dark navy */
+  --color-bg-secondary: #1E293B;
+  /* Slate panels */
+  --color-bg-tertiary: #334155;
+  /* Lighter slate */
+
+  /* Text Colors */
+  --color-text-primary: #F8FAFC;
+  /* White */
+  --color-text-secondary: #94A3B8;
+  /* Gray */
+  --color-text-muted: #64748B;
+  /* Muted gray */
+
+  /* Border */
+  --color-border: #334155;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Font Family */
+  --font-family-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-family-sans);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Leaflet map container fix */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-bg-primary);
+}
+
+/* SOS Button Pulse Animation */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+.sos-pulse::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: var(--color-danger);
+  animation: pulse-ring 1.5s ease-out infinite;
+  z-index: -1;
+}
+
+/* Progress ring for long press */
+@keyframes progress-ring {
+  0% {
+    stroke-dashoffset: 226;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.progress-ring-circle {
+  stroke-dasharray: 226;
+  stroke-dashoffset: 226;
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+.progress-ring-circle.active {
+  animation: progress-ring 2s linear forwards;
+}
+
+/* Bottom sheet transition */
+.bottom-sheet {
+  transition: height 0.3s ease-out, transform 0.3s ease-out;
+}
+
+/* Hide scrollbar but keep functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom tile layer dark overlay */
+.leaflet-tile-pane {
+  filter: brightness(0.85) saturate(0.9);
+}
+
+/* Modal slide-up animation */
+@keyframes slide-up {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
+
+/* Bounce animation for success */
+@keyframes bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 1s ease-in-out infinite;
+}
+
+/* Subtle pulse for dashboard alerts */
+@keyframes pulse-subtle {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
