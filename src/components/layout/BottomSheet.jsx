@@ -43,12 +43,9 @@ export default function BottomSheet() {
                     </div>
                 </div>
 
-                {/* Action Buttons */}
+                {/* Action Button */}
                 <div className="flex gap-3">
                     <button className="flex-1 py-2.5 bg-primary text-bg-primary font-medium rounded-xl hover:bg-primary-dark transition-colors">
-                        Track Bus
-                    </button>
-                    <button className="flex-1 py-2.5 bg-bg-tertiary text-text-primary font-medium rounded-xl hover:bg-border transition-colors">
                         Details
                     </button>
                 </div>

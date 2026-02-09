@@ -1,7 +1,6 @@
 import {
     LayoutDashboard,
     AlertTriangle,
-    Bus,
     MapPin,
     Settings,
     Shield,
@@ -11,7 +10,6 @@ import {
 const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'sos', label: 'Active SOS', icon: AlertTriangle, badge: 3 },
-    { id: 'shuttles', label: 'Shuttle Monitoring', icon: Bus },
     { id: 'heatmap', label: 'Heatmap', icon: MapPin },
     { id: 'settings', label: 'Settings', icon: Settings },
 ];
@@ -45,8 +43,8 @@ export default function Sidebar({ activeTab, onTabChange }) {
                             key={item.id}
                             onClick={() => onTabChange(item.id)}
                             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left ${isActive
-                                    ? 'bg-primary/20 text-primary'
-                                    : 'text-text-secondary hover:bg-bg-tertiary hover:text-text-primary'
+                                ? 'bg-primary/20 text-primary'
+                                : 'text-text-secondary hover:bg-bg-tertiary hover:text-text-primary'
                                 }`}
                         >
                             <Icon className="w-5 h-5" />

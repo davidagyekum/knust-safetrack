@@ -16,6 +16,8 @@
   /* Emergency Red */
   --color-danger-dark: #B91C1C;
   /* Darker red */
+  --color-accent: #38BDF8;
+  /* Accent blue for routes/links */
 
   /* Background Colors (Dark Theme) */
   --color-bg-primary: #0F172A;
@@ -155,6 +157,23 @@ body {
   animation: slide-up 0.3s ease-out forwards;
 }
 
+/* Menu drawer slide-right animation */
+@keyframes slide-right {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-right {
+  animation: slide-right 0.3s ease-out forwards;
+}
+
 /* Bounce animation for success */
 @keyframes bounce {
 
@@ -187,4 +206,163 @@ body {
 
 .animate-pulse-subtle {
   animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* ===== MOBILE RESPONSIVENESS ===== */
+
+/* Ensure full viewport usage */
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Mobile-first base styles */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Improve touch targets for mobile */
+button,
+a,
+input,
+select,
+textarea {
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+/* Prevent text selection on UI elements */
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Safe area padding for notched devices */
+.safe-area-top {
+  padding-top: max(16px, env(safe-area-inset-top));
+}
+
+.safe-area-bottom {
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+/* Responsive text sizes */
+@media (max-width: 375px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 376px) and (max-width: 428px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 429px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* Small phones (iPhone SE, small Android) */
+@media (max-width: 375px) {
+  .bottom-nav-label {
+    font-size: 10px !important;
+  }
+
+  .quick-chip {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* Standard mobile landscape */
+@media (max-height: 500px) and (orientation: landscape) {
+  .bottom-sheet {
+    max-height: 40vh !important;
+  }
+
+  .sos-button {
+    width: 56px !important;
+    height: 56px !important;
+  }
+}
+
+/* Tablet and larger screens */
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none !important;
+  }
+
+  .container-max {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}
+
+/* Desktop - center the mobile app */
+@media (min-width: 1024px) {
+  #root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0a1628 0%, #1a2f4a 100%);
+  }
+
+  .app-container {
+    max-width: 428px;
+    max-height: 926px;
+    width: 100%;
+    height: 100vh;
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.5);
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+  }
+}
+
+/* Ensure modals are centered on all screens */
+.modal-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: min(400px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+
+/* Better scrolling on mobile */
+.scroll-container {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Input fields mobile optimization */
+input,
+textarea,
+select {
+  font-size: 16px !important;
+  /* Prevents iOS zoom */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Fix for iOS input zoom */
+@supports (-webkit-touch-callout: none) {
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    font-size: 16px !important;
+  }
 }

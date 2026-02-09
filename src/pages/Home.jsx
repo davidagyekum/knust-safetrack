@@ -8,11 +8,16 @@ import MapContainerComponent from '../components/map/MapContainer';
 import EmergencyMode from '../components/EmergencyMode';
 import WalkWithMeModal from '../components/WalkWithMeModal';
 import ActiveWalkScreen from '../components/ActiveWalkScreen';
+import SearchModal from '../components/SearchModal';
+import MenuDrawer from '../components/MenuDrawer';
 
-export default function Home() {
+export default function Home({ onSignOut }) {
     const [isEmergencyMode, setIsEmergencyMode] = useState(false);
     const [showWalkModal, setShowWalkModal] = useState(false);
     const [activeWalk, setActiveWalk] = useState(null);
+    const [showSearch, setShowSearch] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
+    const [currentLocation, setCurrentLocation] = useState('KNUST Campus');
 
     const handleSOSActivate = () => {
         setIsEmergencyMode(true);
@@ -35,6 +40,10 @@ export default function Home() {
         setActiveWalk(null);
     };
 
+    const handleLocationSelect = (location) => {
+        setCurrentLocation(location.name);
+    };
+
     // Show Emergency Mode screen when SOS is activated
     if (isEmergencyMode) {
         return <EmergencyMode onCancel={handleEmergencyCancel} />;
@@ -51,7 +60,11 @@ export default function Home() {
             <MapContainerComponent />
 
             {/* Floating Top Bar */}
-            <TopBar currentLocation="KNUST Campus" />
+            <TopBar
+                currentLocation={currentLocation}
+                onMenuClick={() => setShowMenu(true)}
+                onSearchClick={() => setShowSearch(true)}
+            />
 
             {/* Quick Action Chips */}
             <QuickActionChips onWalkWithMe={handleWalkWithMeClick} />
@@ -70,6 +83,20 @@ export default function Home() {
                 isOpen={showWalkModal}
                 onClose={() => setShowWalkModal(false)}
                 onStartWalk={handleStartWalk}
+            />
+
+            {/* Search Modal */}
+            <SearchModal
+                isOpen={showSearch}
+                onClose={() => setShowSearch(false)}
+                onSelectLocation={handleLocationSelect}
+            />
+
+            {/* Menu Drawer */}
+            <MenuDrawer
+                isOpen={showMenu}
+                onClose={() => setShowMenu(false)}
+                onSignOut={onSignOut}
             />
         </div>
     );

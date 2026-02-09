@@ -1,15 +1,27 @@
-import { Menu, Search, MapPin } from 'lucide-react';
+import { Menu, Search, MapPin, ArrowLeft } from 'lucide-react';
 
-export default function TopBar({ currentLocation = 'KNUST Campus' }) {
+export default function TopBar({
+    currentLocation = 'KNUST Campus',
+    showSearch = true,
+    showBack = false,
+    onBack,
+    onMenuClick,
+    onSearchClick
+}) {
     return (
         <div className="absolute top-3 left-4 right-4 z-[1000]">
             <div className="flex items-center justify-between h-12 px-4 bg-bg-secondary/90 backdrop-blur-sm rounded-xl border border-border">
-                {/* Menu Button */}
+                {/* Menu/Back Button */}
                 <button
+                    onClick={showBack ? onBack : onMenuClick}
                     className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-bg-tertiary transition-colors"
-                    aria-label="Open menu"
+                    aria-label={showBack ? 'Go back' : 'Open menu'}
                 >
-                    <Menu className="w-5 h-5 text-text-primary" />
+                    {showBack ? (
+                        <ArrowLeft className="w-5 h-5 text-text-primary" />
+                    ) : (
+                        <Menu className="w-5 h-5 text-text-primary" />
+                    )}
                 </button>
 
                 {/* Location Display */}
@@ -21,12 +33,17 @@ export default function TopBar({ currentLocation = 'KNUST Campus' }) {
                 </button>
 
                 {/* Search Button */}
-                <button
-                    className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-bg-tertiary transition-colors"
-                    aria-label="Search"
-                >
-                    <Search className="w-5 h-5 text-text-primary" />
-                </button>
+                {showSearch ? (
+                    <button
+                        onClick={onSearchClick}
+                        className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-bg-tertiary transition-colors"
+                        aria-label="Search"
+                    >
+                        <Search className="w-5 h-5 text-text-primary" />
+                    </button>
+                ) : (
+                    <div className="w-10 h-10" />
+                )}
             </div>
         </div>
     );

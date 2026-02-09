@@ -1,27 +1,32 @@
 import { Map, Route, Bell, User } from 'lucide-react';
-import { useState } from 'react';
 
 const navItems = [
-    { id: 'map', label: 'Map', icon: Map },
-    { id: 'trips', label: 'Trips', icon: Route },
-    { id: 'alerts', label: 'Alerts', icon: Bell, badge: 2 },
-    { id: 'profile', label: 'Profile', icon: User },
+    { id: 'map', label: 'Map', icon: Map, hash: '#map' },
+    { id: 'trips', label: 'Trips', icon: Route, hash: '#trips' },
+    { id: 'alerts', label: 'Alerts', icon: Bell, badge: 2, hash: '#alerts' },
+    { id: 'profile', label: 'Profile', icon: User, hash: '#profile' },
 ];
 
-export default function BottomNav() {
-    const [activeTab, setActiveTab] = useState('map');
+export default function BottomNav({ activeTab }) {
+    // Get current tab from hash or prop
+    const currentHash = window.location.hash.replace('#', '') || 'map';
+    const currentTab = activeTab || currentHash;
+
+    const handleNavigation = (hash) => {
+        window.location.hash = hash;
+    };
 
     return (
         <nav className="fixed bottom-0 left-0 right-0 z-[1001] bg-bg-secondary border-t border-border">
             <div className="flex items-center justify-around h-16 px-4">
                 {navItems.map((item) => {
                     const Icon = item.icon;
-                    const isActive = activeTab === item.id;
+                    const isActive = currentTab === item.id;
 
                     return (
                         <button
                             key={item.id}
-                            onClick={() => setActiveTab(item.id)}
+                            onClick={() => handleNavigation(item.hash)}
                             className={`flex flex-col items-center justify-center gap-1 w-16 py-2 rounded-xl transition-colors relative ${isActive ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
                                 }`}
                             aria-label={item.label}
