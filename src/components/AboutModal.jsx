@@ -1,6 +1,13 @@
-import { X, Shield, Users, Heart } from 'lucide-react';
+import { useRef } from 'react';
+import { X, Shield, Users } from 'lucide-react';
+import useEscapeKey from '../hooks/useEscapeKey';
+import useFocusTrap from '../hooks/useFocusTrap';
 
 export default function AboutModal({ isOpen, onClose }) {
+    const modalRef = useRef(null);
+    const closeBtnRef = useRef(null);
+    useEscapeKey(isOpen, onClose);
+    useFocusTrap({ enabled: isOpen, containerRef: modalRef, initialFocusRef: closeBtnRef });
     if (!isOpen) return null;
 
     return (
@@ -28,7 +35,12 @@ export default function AboutModal({ isOpen, onClose }) {
                 borderRadius: '16px',
                 border: '1px solid var(--color-border)',
                 overflow: 'hidden',
-            }}>
+            }}
+                ref={modalRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="about-title"
+            >
                 {/* Header */}
                 <div style={{
                     display: 'flex',
@@ -37,10 +49,13 @@ export default function AboutModal({ isOpen, onClose }) {
                     padding: '16px',
                     borderBottom: '1px solid var(--color-border)',
                 }}>
-                    <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--color-text-primary)', margin: 0 }}>About SafeTrack</h2>
+                    <h2 id="about-title" style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--color-text-primary)', margin: 0 }}>About SafeTrack</h2>
                     <button
+                        type="button"
                         onClick={onClose}
                         style={{ padding: '8px', borderRadius: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
+                        aria-label="Close"
+                        ref={closeBtnRef}
                     >
                         <X style={{ width: '20px', height: '20px', color: 'var(--color-text-secondary)' }} />
                     </button>

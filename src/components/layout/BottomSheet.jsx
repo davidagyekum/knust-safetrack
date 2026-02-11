@@ -1,10 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ChevronUp, Bus, Clock, ArrowRight } from 'lucide-react';
 import { getNextShuttle, BUS_STOPS } from '../../data/mockData';
 
 export default function BottomSheet() {
     const [isExpanded, setIsExpanded] = useState(false);
-    const nextShuttle = getNextShuttle();
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const t = window.setTimeout(() => setIsLoading(false), 700);
+        return () => window.clearTimeout(t);
+    }, []);
+
+    const nextShuttle = isLoading ? null : getNextShuttle();
 
     return (
         <div
@@ -30,16 +37,16 @@ export default function BottomSheet() {
                             <Bus className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                            <p className="text-sm text-text-secondary">Next Shuttle at</p>
-                            <p className="font-semibold text-text-primary">{nextShuttle.stop}</p>
+                            <p className="text-sm text-text-secondary">{isLoading ? 'Fetching shuttles…' : 'Next Shuttle at'}</p>
+                            <p className="font-semibold text-text-primary">{isLoading ? 'Please wait' : nextShuttle.stop}</p>
                         </div>
                     </div>
                     <div className="text-right">
                         <div className="flex items-center gap-1 text-primary">
                             <Clock className="w-4 h-4" />
-                            <span className="font-bold text-lg">{nextShuttle.eta} min</span>
+                            <span className="font-bold text-lg">{isLoading ? '--' : `${nextShuttle.eta} min`}</span>
                         </div>
-                        <p className="text-xs text-text-secondary">{nextShuttle.route}</p>
+                        <p className="text-xs text-text-secondary">{isLoading ? 'Loading route…' : nextShuttle.route}</p>
                     </div>
                 </div>
 

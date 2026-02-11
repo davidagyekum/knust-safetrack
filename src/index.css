@@ -30,9 +30,9 @@
   /* Text Colors */
   --color-text-primary: #F8FAFC;
   /* White */
-  --color-text-secondary: #94A3B8;
-  /* Gray */
-  --color-text-muted: #64748B;
+  --color-text-secondary: #AAB7CF;
+  /* Higher-contrast gray */
+  --color-text-muted: #7C8CA6;
   /* Muted gray */
 
   /* Border */
@@ -65,7 +65,8 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* Leaflet map container fix */

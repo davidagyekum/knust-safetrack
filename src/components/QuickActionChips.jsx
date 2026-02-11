@@ -1,4 +1,5 @@
 import { Users, Share2, AlertTriangle } from 'lucide-react';
+import useToast from '../hooks/useToast.js';
 
 const chips = [
     { id: 'walk', label: 'Walk With Me', icon: Users, color: 'secondary' },
@@ -7,15 +8,16 @@ const chips = [
 ];
 
 export default function QuickActionChips({ onWalkWithMe }) {
+    const toast = useToast();
     const handleChipClick = (chipId) => {
         if (chipId === 'walk' && onWalkWithMe) {
             onWalkWithMe();
         } else if (chipId === 'share') {
             // Share location functionality
-            alert('Location sharing link copied!');
+            toast.success('Location sharing link copied!');
         } else if (chipId === 'report') {
             // Report issue functionality
-            alert('Report Issue feature coming soon!');
+            toast.info('Report Issue feature coming soon!');
         }
     };
 

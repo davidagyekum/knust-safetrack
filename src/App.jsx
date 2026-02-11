@@ -5,9 +5,38 @@ import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Trips from './pages/Trips';
 import Profile from './pages/Profile';
+import Alerts from './pages/Alerts';
 import './index.css';
+import useToast from './hooks/useToast.js';
+
+const ROUTES = new Set([
+  'map',
+  'trips',
+  'alerts',
+  'profile',
+  'dashboard',
+  'signin',
+  'signup',
+]);
+
+function normalizeView(raw, isAuthenticated, userType) {
+  const view = raw || 'map';
+
+  if (!ROUTES.has(view)) {
+    return isAuthenticated ? (userType === 'security' ? 'dashboard' : 'map') : 'signin';
+  }
+
+  if (!isAuthenticated && view !== 'signin' && view !== 'signup') return 'signin';
+
+  if (isAuthenticated && (view === 'signin' || view === 'signup')) {
+    return userType === 'security' ? 'dashboard' : 'map';
+  }
+
+  return view;
+}
 
 function App() {
+  const toast = useToast();
   // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem('safetrack_auth') === 'true';
@@ -18,19 +47,25 @@ function App() {
 
   // Simple routing - check URL hash
   const [view, setView] = useState(() => {
-    const hash = window.location.hash.replace('#', '') || 'map';
-    return hash;
+    const hash = window.location.hash.replace('#', '');
+    return normalizeView(hash, isAuthenticated, userType);
   });
 
   // Listen for hash changes
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '') || 'map';
-      setView(hash);
+      const hash = window.location.hash.replace('#', '');
+      const next = normalizeView(hash, isAuthenticated, userType);
+      setView(next);
+
+      // Keep the URL consistent (e.g. unknown hash -> #map).
+      if (next !== hash) {
+        window.location.hash = next;
+      }
     };
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
+  }, [isAuthenticated, userType]);
 
   // Handle sign in
   const handleSignIn = (data) => {
@@ -42,10 +77,10 @@ function App() {
   };
 
   // Handle sign up (same as sign in for demo)
-  const handleSignUp = (data) => {
+  const handleSignUp = () => {
     // In a real app, this would send a registration request
     // For demo, we show a success message and switch to sign in
-    alert('Access request submitted! For demo purposes, you can now sign in.');
+    toast.success('Access request submitted! You can now sign in (demo).');
     window.location.hash = 'signin';
   };
 
@@ -84,6 +119,8 @@ function App() {
 
   // Student app navigation
   switch (view) {
+    case 'alerts':
+      return <Alerts onSignOut={handleSignOut} />;
     case 'trips':
       return <Trips onSignOut={handleSignOut} />;
     case 'profile':

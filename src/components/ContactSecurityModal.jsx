@@ -1,4 +1,7 @@
+import { useRef } from 'react';
 import { X, Phone, MapPin, Clock, Shield, AlertTriangle } from 'lucide-react';
+import useEscapeKey from '../hooks/useEscapeKey';
+import useFocusTrap from '../hooks/useFocusTrap';
 
 const securityContacts = [
     {
@@ -36,11 +39,11 @@ const securityContacts = [
 ];
 
 export default function ContactSecurityModal({ isOpen, onClose }) {
+    const modalRef = useRef(null);
+    const closeBtnRef = useRef(null);
+    useEscapeKey(isOpen, onClose);
+    useFocusTrap({ enabled: isOpen, containerRef: modalRef, initialFocusRef: closeBtnRef });
     if (!isOpen) return null;
-
-    const handleCall = (phone) => {
-        window.location.href = `tel:${phone.replace(/\s/g, '')}`;
-    };
 
     return (
         <div style={{
@@ -67,7 +70,12 @@ export default function ContactSecurityModal({ isOpen, onClose }) {
                 borderRadius: '16px',
                 border: '1px solid var(--color-border)',
                 overflow: 'hidden',
-            }}>
+            }}
+                ref={modalRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="contact-security-title"
+            >
                 {/* Header */}
                 <div style={{
                     display: 'flex',
@@ -78,11 +86,13 @@ export default function ContactSecurityModal({ isOpen, onClose }) {
                 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <Shield style={{ width: '20px', height: '20px', color: 'var(--color-secondary)' }} />
-                        <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--color-text-primary)', margin: 0 }}>Contact Security</h2>
+                        <h2 id="contact-security-title" style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--color-text-primary)', margin: 0 }}>Contact Security</h2>
                     </div>
                     <button
                         onClick={onClose}
                         style={{ padding: '8px', borderRadius: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
+                        aria-label="Close"
+                        ref={closeBtnRef}
                     >
                         <X style={{ width: '20px', height: '20px', color: 'var(--color-text-secondary)' }} />
                     </button>
@@ -132,18 +142,22 @@ export default function ContactSecurityModal({ isOpen, onClose }) {
                                     </div>
                                     <p style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--color-primary)', margin: '8px 0 0 0' }}>{contact.phone}</p>
                                 </div>
-                                <button
-                                    onClick={() => handleCall(contact.phone)}
+                                <a
+                                    href={`tel:${contact.phone.replace(/\s/g, '')}`}
+                                    aria-label={`Call ${contact.name}`}
                                     style={{
                                         padding: '12px',
                                         backgroundColor: 'var(--color-primary)',
                                         borderRadius: '12px',
                                         border: 'none',
                                         cursor: 'pointer',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
                                     }}
                                 >
                                     <Phone style={{ width: '20px', height: '20px', color: 'var(--color-bg-primary)' }} />
-                                </button>
+                                </a>
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '12px', color: 'var(--color-text-secondary)' }}>
                                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>

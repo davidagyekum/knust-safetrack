@@ -1,4 +1,7 @@
+import { useRef } from 'react';
 import { MapPin, Navigation, Clock, Star, X, AlertTriangle, Phone } from 'lucide-react';
+import useEscapeKey from '../hooks/useEscapeKey';
+import useFocusTrap from '../hooks/useFocusTrap';
 
 // Mock location details
 const locationDetails = {
@@ -21,11 +24,15 @@ const locationDetails = {
 
 export default function Details({ isOpen, onClose, location }) {
     const data = location || locationDetails;
+    const panelRef = useRef(null);
+    const closeBtnRef = useRef(null);
 
+    useEscapeKey(isOpen, onClose);
+    useFocusTrap({ enabled: isOpen, containerRef: panelRef, initialFocusRef: closeBtnRef });
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[2000] flex items-end justify-center">
+        <div className="fixed inset-0 z-[2000] flex items-end justify-center" role="dialog" aria-modal="true" aria-label="Location details">
             {/* Backdrop */}
             <div
                 className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -33,7 +40,7 @@ export default function Details({ isOpen, onClose, location }) {
             />
 
             {/* Details Panel */}
-            <div className="relative w-full max-w-lg bg-bg-secondary rounded-t-3xl max-h-[85vh] overflow-hidden animate-slide-up">
+            <div ref={panelRef} className="relative w-full max-w-lg bg-bg-secondary rounded-t-3xl max-h-[85vh] overflow-hidden animate-slide-up">
                 {/* Handle */}
                 <div className="flex justify-center pt-3 pb-2">
                     <div className="w-10 h-1 bg-bg-tertiary rounded-full" />
@@ -54,6 +61,9 @@ export default function Details({ isOpen, onClose, location }) {
                         <button
                             onClick={onClose}
                             className="p-2 bg-bg-tertiary rounded-lg hover:bg-border transition-colors"
+                            type="button"
+                            aria-label="Close"
+                            ref={closeBtnRef}
                         >
                             <X className="w-5 h-5 text-text-secondary" />
                         </button>

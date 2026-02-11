@@ -8,6 +8,7 @@ export default function SignIn({ onSignIn, onSwitchToSignUp }) {
         email: '',
         password: '',
     });
+    const formMaxWidth = 'clamp(360px, 60vw, 720px)';
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -48,13 +49,15 @@ export default function SignIn({ onSignIn, onSwitchToSignUp }) {
 
     return (
         <div style={{
-            minHeight: '100vh',
+            minHeight: '100dvh',
+            width: '100%',
             backgroundColor: 'var(--color-bg-primary)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '24px',
+            padding: 'clamp(16px, 5vw, 32px)',
+            overflowY: 'auto',
         }}>
             {/* Background Gradient */}
             <div style={{
@@ -93,7 +96,7 @@ export default function SignIn({ onSignIn, onSwitchToSignUp }) {
             </div>
 
             {/* User Type Toggle */}
-            <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '384px', marginBottom: '24px' }}>
+            <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: formMaxWidth, marginBottom: '24px' }}>
                 <div style={{
                     backgroundColor: 'var(--color-bg-secondary)',
                     borderRadius: '12px',
@@ -150,7 +153,7 @@ export default function SignIn({ onSignIn, onSwitchToSignUp }) {
             </div>
 
             {/* Sign In Form */}
-            <form onSubmit={handleSubmit} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '384px' }}>
+            <form onSubmit={handleSubmit} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: formMaxWidth }}>
                 {/* Email/ID Field */}
                 <div style={{ marginBottom: '16px' }}>
                     <label style={{ display: 'block', fontSize: '14px', fontWeight: '500', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>

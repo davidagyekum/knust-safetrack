@@ -12,10 +12,6 @@ export default function BottomNav({ activeTab }) {
     const currentHash = window.location.hash.replace('#', '') || 'map';
     const currentTab = activeTab || currentHash;
 
-    const handleNavigation = (hash) => {
-        window.location.hash = hash;
-    };
-
     return (
         <nav className="fixed bottom-0 left-0 right-0 z-[1001] bg-bg-secondary border-t border-border">
             <div className="flex items-center justify-around h-16 px-4">
@@ -24,9 +20,9 @@ export default function BottomNav({ activeTab }) {
                     const isActive = currentTab === item.id;
 
                     return (
-                        <button
+                        <a
                             key={item.id}
-                            onClick={() => handleNavigation(item.hash)}
+                            href={item.hash}
                             className={`flex flex-col items-center justify-center gap-1 w-16 py-2 rounded-xl transition-colors relative ${isActive ? 'text-primary' : 'text-text-secondary hover:text-text-primary'
                                 }`}
                             aria-label={item.label}
@@ -45,13 +41,13 @@ export default function BottomNav({ activeTab }) {
                             {isActive && (
                                 <div className="absolute -bottom-0 w-8 h-0.5 bg-primary rounded-full" />
                             )}
-                        </button>
+                        </a>
                     );
                 })}
             </div>
 
             {/* Safe area padding for notched devices */}
-            <div className="h-safe-area-inset-bottom bg-bg-secondary" />
+            <div className="bg-bg-secondary" style={{ height: 'env(safe-area-inset-bottom)' }} />
         </nav>
     );
 }

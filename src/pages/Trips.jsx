@@ -97,7 +97,15 @@ export default function Trips({ onSignOut }) {
 
                 {/* Trip List */}
                 <div className="space-y-3">
-                    {tripHistory.map((trip) => (
+                    {tripHistory.length === 0 ? (
+                        <div className="bg-bg-secondary rounded-xl p-6 border border-border text-center">
+                            <p className="font-semibold text-text-primary">No trips yet</p>
+                            <p className="text-sm text-text-secondary mt-1">
+                                Your walk sessions and alerts will show up here.
+                            </p>
+                        </div>
+                    ) : (
+                        tripHistory.map((trip) => (
                         <div
                             key={trip.id}
                             className="bg-bg-secondary rounded-xl p-4 border border-border hover:border-primary/30 transition-colors cursor-pointer"
@@ -135,7 +143,8 @@ export default function Trips({ onSignOut }) {
                                 <ChevronRight className="w-5 h-5 text-text-muted" />
                             </div>
                         </div>
-                    ))}
+                    ))
+                    )}
                 </div>
             </div>
 

@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useMemo, useState, useRef } from 'react';
 import { Search, X, MapPin, Clock } from 'lucide-react';
+import useEscapeKey from '../hooks/useEscapeKey';
+import useFocusTrap from '../hooks/useFocusTrap';
 
 // Mock search data - campus locations
 const searchableLocations = [
@@ -22,36 +24,27 @@ const searchableLocations = [
 
 export default function SearchModal({ isOpen, onClose, onSelectLocation }) {
     const [query, setQuery] = useState('');
-    const [results, setResults] = useState([]);
     const [recentSearches, setRecentSearches] = useState([
         'Main Library',
         'Hall 7',
         'JQB',
     ]);
     const inputRef = useRef(null);
+    const panelRef = useRef(null);
 
-    // Focus input when modal opens
-    useEffect(() => {
-        if (isOpen && inputRef.current) {
-            setTimeout(() => inputRef.current?.focus(), 100);
-        }
-    }, [isOpen]);
+    useEscapeKey(isOpen, onClose);
+    useFocusTrap({ enabled: isOpen, containerRef: panelRef, initialFocusRef: inputRef });
 
-    // Search logic
-    useEffect(() => {
-        if (query.trim() === '') {
-            setResults([]);
-            return;
-        }
+    const results = useMemo(() => {
+        if (query.trim() === '') return [];
 
         const searchTerm = query.toLowerCase();
-        const filtered = searchableLocations.filter(
+        return searchableLocations.filter(
             (loc) =>
                 loc.name.toLowerCase().includes(searchTerm) ||
                 loc.type.toLowerCase().includes(searchTerm) ||
                 loc.area.toLowerCase().includes(searchTerm)
         );
-        setResults(filtered);
     }, [query]);
 
     const handleSelect = (location) => {
@@ -83,9 +76,18 @@ export default function SearchModal({ isOpen, onClose, onSelectLocation }) {
             />
 
             {/* Search Panel */}
-            <div className="relative bg-bg-secondary m-4 rounded-2xl overflow-hidden animate-slide-up max-h-[80vh] flex flex-col">
+            <div
+                ref={panelRef}
+                className="relative bg-bg-secondary m-4 rounded-2xl overflow-hidden animate-slide-up max-h-[80vh] flex flex-col"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="search-title"
+            >
                 {/* Search Input */}
                 <div className="p-4 border-b border-border">
+                    <h2 id="search-title" className="sr-only">
+                        Search locations
+                    </h2>
                     <div className="relative">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted" />
                         <input
@@ -95,11 +97,14 @@ export default function SearchModal({ isOpen, onClose, onSelectLocation }) {
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             className="w-full bg-bg-primary border border-border rounded-xl py-3 pl-12 pr-12 text-text-primary placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                            aria-label="Search locations"
                         />
                         {query && (
                             <button
+                                type="button"
                                 onClick={() => setQuery('')}
                                 className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary"
+                                aria-label="Clear search"
                             >
                                 <X className="w-5 h-5" />
                             </button>

@@ -1,5 +1,24 @@
-import { useState } from 'react';
-import { X, Bell, MapPin, Moon, Shield, ToggleLeft, ToggleRight } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { X, Bell, Moon, Shield, ToggleLeft, ToggleRight } from 'lucide-react';
+import useEscapeKey from '../hooks/useEscapeKey';
+import useFocusTrap from '../hooks/useFocusTrap';
+
+function ToggleSwitch({ enabled, onToggle }) {
+    return (
+        <button
+            type="button"
+            onClick={onToggle}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+            aria-label={enabled ? 'Disable setting' : 'Enable setting'}
+        >
+            {enabled ? (
+                <ToggleRight style={{ width: '32px', height: '32px', color: 'var(--color-primary)' }} />
+            ) : (
+                <ToggleLeft style={{ width: '32px', height: '32px', color: 'var(--color-text-muted)' }} />
+            )}
+        </button>
+    );
+}
 
 export default function SettingsModal({ isOpen, onClose }) {
     const [settings, setSettings] = useState({
@@ -9,22 +28,16 @@ export default function SettingsModal({ isOpen, onClose }) {
         darkMode: true,
         soundAlerts: true,
     });
+    const modalRef = useRef(null);
+    const closeBtnRef = useRef(null);
 
     const toggleSetting = (key) => {
         setSettings(prev => ({ ...prev, [key]: !prev[key] }));
     };
 
+    useEscapeKey(isOpen, onClose);
+    useFocusTrap({ enabled: isOpen, containerRef: modalRef, initialFocusRef: closeBtnRef });
     if (!isOpen) return null;
-
-    const ToggleSwitch = ({ enabled, onToggle }) => (
-        <button onClick={onToggle} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-            {enabled ? (
-                <ToggleRight style={{ width: '32px', height: '32px', color: 'var(--color-primary)' }} />
-            ) : (
-                <ToggleLeft style={{ width: '32px', height: '32px', color: 'var(--color-text-muted)' }} />
-            )}
-        </button>
-    );
 
     const settingRowStyle = {
         display: 'flex',
@@ -61,7 +74,12 @@ export default function SettingsModal({ isOpen, onClose }) {
                 borderRadius: '16px',
                 border: '1px solid var(--color-border)',
                 overflow: 'hidden',
-            }}>
+            }}
+                ref={modalRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="settings-title"
+            >
                 {/* Header */}
                 <div style={{
                     display: 'flex',
@@ -70,10 +88,13 @@ export default function SettingsModal({ isOpen, onClose }) {
                     padding: '16px',
                     borderBottom: '1px solid var(--color-border)',
                 }}>
-                    <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--color-text-primary)', margin: 0 }}>Settings</h2>
+                    <h2 id="settings-title" style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--color-text-primary)', margin: 0 }}>Settings</h2>
                     <button
+                        type="button"
                         onClick={onClose}
                         style={{ padding: '8px', borderRadius: '8px', background: 'none', border: 'none', cursor: 'pointer' }}
+                        aria-label="Close"
+                        ref={closeBtnRef}
                     >
                         <X style={{ width: '20px', height: '20px', color: 'var(--color-text-secondary)' }} />
                     </button>

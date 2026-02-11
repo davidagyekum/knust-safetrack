@@ -1,4 +1,5 @@
-import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Circle, useMapEvents } from 'react-leaflet';
+import { useEffect, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { KNUST_CENTER, BUS_STOPS, SHUTTLES } from '../../data/mockData';
@@ -86,22 +87,37 @@ const busIcon = L.divIcon({
     iconAnchor: [14, 14],
 });
 
+function ZoomWatcher({ onZoomChange }) {
+    const map = useMapEvents({
+        zoomend: () => onZoomChange(map.getZoom()),
+    });
+    useEffect(() => {
+        onZoomChange(map.getZoom());
+    }, [map, onZoomChange]);
+    return null;
+}
+
 export default function DashboardMap({ showHeatmap = false, selectedAlert, onAlertClick }) {
+    const [zoom, setZoom] = useState(15);
+    const heatPoints = showHeatmap
+        ? (zoom >= 14 ? HEATMAP_DATA : HEATMAP_DATA.filter((_, idx) => idx % 2 === 0))
+        : [];
     return (
-        <div className="flex-1 relative">
+        <div className="relative w-full h-full">
             <MapContainer
                 center={[KNUST_CENTER.lat, KNUST_CENTER.lng]}
                 zoom={15}
                 className="w-full h-full"
                 zoomControl={true}
-                attributionControl={false}
+                attributionControl={true}
             >
+                <ZoomWatcher onZoomChange={setZoom} />
                 <TileLayer
                     url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
                 />
 
                 {/* Heatmap circles (when enabled) */}
-                {showHeatmap && HEATMAP_DATA.map((point, idx) => (
+                {heatPoints.map((point, idx) => (
                     <Circle
                         key={`heat-${idx}`}
                         center={[point.lat, point.lng]}
@@ -113,6 +129,20 @@ export default function DashboardMap({ showHeatmap = false, selectedAlert, onAle
                         }}
                     />
                 ))}
+
+                {/* Selected SOS highlight */}
+                {selectedAlert && (
+                    <Circle
+                        center={[selectedAlert.lat, selectedAlert.lng]}
+                        radius={120}
+                        pathOptions={{
+                            color: '#F4C430',
+                            weight: 2,
+                            fillColor: 'rgba(244, 196, 48, 0.15)',
+                            fillOpacity: 0.25,
+                        }}
+                    />
+                )}
 
                 {/* SOS Alerts */}
                 {ACTIVE_SOS_ALERTS.map((alert) => (
@@ -171,7 +201,7 @@ export default function DashboardMap({ showHeatmap = false, selectedAlert, onAle
                 ))}
 
                 {/* Shuttles */}
-                {SHUTTLES.map((shuttle) => (
+                {zoom >= 14 && SHUTTLES.map((shuttle) => (
                     <Marker
                         key={shuttle.id}
                         position={[shuttle.lat, shuttle.lng]}

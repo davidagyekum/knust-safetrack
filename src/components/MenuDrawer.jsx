@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { X, Map, Route, Bell, User, Settings, Shield, LogOut, Info, Phone } from 'lucide-react';
 import SettingsModal from './SettingsModal';
 import ContactSecurityModal from './ContactSecurityModal';
 import AboutModal from './AboutModal';
+import useEscapeKey from '../hooks/useEscapeKey';
+import useFocusTrap from '../hooks/useFocusTrap';
 
 const menuItems = [
     { id: 'map', label: 'Map', icon: Map, hash: '#map' },
@@ -15,13 +17,12 @@ export default function MenuDrawer({ isOpen, onClose, onSignOut }) {
     const [showSettings, setShowSettings] = useState(false);
     const [showContactSecurity, setShowContactSecurity] = useState(false);
     const [showAbout, setShowAbout] = useState(false);
+    const drawerRef = useRef(null);
+    const closeBtnRef = useRef(null);
 
+    useEscapeKey(isOpen, onClose);
+    useFocusTrap({ enabled: isOpen, containerRef: drawerRef, initialFocusRef: closeBtnRef });
     if (!isOpen) return null;
-
-    const handleNavigation = (hash) => {
-        window.location.hash = hash;
-        onClose();
-    };
 
     const handleQuickAction = (action) => {
         switch (action) {
@@ -41,7 +42,7 @@ export default function MenuDrawer({ isOpen, onClose, onSignOut }) {
 
     return (
         <>
-            <div className="fixed inset-0 z-[2000] flex">
+            <div className="fixed inset-0 z-[2000] flex" role="dialog" aria-modal="true" aria-label="Menu">
                 {/* Backdrop */}
                 <div
                     className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -49,7 +50,7 @@ export default function MenuDrawer({ isOpen, onClose, onSignOut }) {
                 />
 
                 {/* Drawer */}
-                <div className="relative w-72 h-full bg-bg-secondary border-r border-border flex flex-col animate-slide-right">
+                <div ref={drawerRef} className="relative w-72 h-full bg-bg-secondary border-r border-border flex flex-col animate-slide-right">
                     {/* Header */}
                     <div className="p-5 border-b border-border">
                         <div className="flex items-center justify-between mb-4">
@@ -65,15 +66,19 @@ export default function MenuDrawer({ isOpen, onClose, onSignOut }) {
                             <button
                                 onClick={onClose}
                                 className="p-2 rounded-lg hover:bg-bg-tertiary transition-colors"
+                                type="button"
+                                aria-label="Close menu"
+                                ref={closeBtnRef}
                             >
                                 <X className="w-5 h-5 text-text-secondary" />
                             </button>
                         </div>
 
                         {/* User Info */}
-                        <div
+                        <a
+                            href="#profile"
                             className="flex items-center gap-3 p-3 bg-bg-primary rounded-xl cursor-pointer hover:bg-bg-tertiary transition-colors"
-                            onClick={() => handleNavigation('#profile')}
+                            onClick={onClose}
                         >
                             <div className="w-10 h-10 bg-secondary/20 rounded-full flex items-center justify-center">
                                 <User className="w-5 h-5 text-secondary" />
@@ -82,7 +87,7 @@ export default function MenuDrawer({ isOpen, onClose, onSignOut }) {
                                 <p className="text-sm font-medium text-text-primary">Student</p>
                                 <p className="text-xs text-text-secondary">View Profile →</p>
                             </div>
-                        </div>
+                        </a>
                     </div>
 
                     {/* Navigation */}
@@ -95,9 +100,10 @@ export default function MenuDrawer({ isOpen, onClose, onSignOut }) {
                                     (item.hash === '#map' && !window.location.hash);
 
                                 return (
-                                    <button
+                                    <a
                                         key={item.id}
-                                        onClick={() => handleNavigation(item.hash)}
+                                        href={item.hash}
+                                        onClick={onClose}
                                         className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${isActive
                                                 ? 'bg-primary/20 text-primary'
                                                 : 'text-text-secondary hover:bg-bg-tertiary hover:text-text-primary'
@@ -110,7 +116,7 @@ export default function MenuDrawer({ isOpen, onClose, onSignOut }) {
                                                 {item.badge}
                                             </span>
                                         )}
-                                    </button>
+                                    </a>
                                 );
                             })}
                         </div>
@@ -120,6 +126,7 @@ export default function MenuDrawer({ isOpen, onClose, onSignOut }) {
                         <p className="text-xs font-medium text-text-muted mb-2 px-2">QUICK ACTIONS</p>
                         <div className="space-y-1">
                             <button
+                                type="button"
                                 onClick={() => handleQuickAction('settings')}
                                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-text-secondary hover:bg-bg-tertiary hover:text-text-primary transition-colors"
                             >
@@ -127,6 +134,7 @@ export default function MenuDrawer({ isOpen, onClose, onSignOut }) {
                                 <span className="flex-1 text-left font-medium text-sm">Settings</span>
                             </button>
                             <button
+                                type="button"
                                 onClick={() => handleQuickAction('security')}
                                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-text-secondary hover:bg-bg-tertiary hover:text-text-primary transition-colors"
                             >
@@ -134,6 +142,7 @@ export default function MenuDrawer({ isOpen, onClose, onSignOut }) {
                                 <span className="flex-1 text-left font-medium text-sm">Contact Security</span>
                             </button>
                             <button
+                                type="button"
                                 onClick={() => handleQuickAction('about')}
                                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-text-secondary hover:bg-bg-tertiary hover:text-text-primary transition-colors"
                             >
@@ -146,6 +155,7 @@ export default function MenuDrawer({ isOpen, onClose, onSignOut }) {
                     {/* Sign Out */}
                     <div className="p-4 border-t border-border">
                         <button
+                            type="button"
                             onClick={() => {
                                 onClose();
                                 if (onSignOut) onSignOut();

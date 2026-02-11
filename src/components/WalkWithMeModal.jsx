@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { X, Users, Shield, MapPin, Navigation, ChevronRight } from 'lucide-react';
-import { BUS_STOPS } from '../data/mockData';
+import useEscapeKey from '../hooks/useEscapeKey';
+import useFocusTrap from '../hooks/useFocusTrap';
 
 const DESTINATIONS = [
     { id: 'hall7', name: 'Hall 7', distance: '1.2 km' },
@@ -15,7 +16,11 @@ export default function WalkWithMeModal({ isOpen, onClose, onStartWalk }) {
     const [step, setStep] = useState(1); // 1: Choose companion, 2: Choose destination
     const [companion, setCompanion] = useState(null);
     const [destination, setDestination] = useState(null);
+    const panelRef = useRef(null);
+    const closeBtnRef = useRef(null);
 
+    useEscapeKey(isOpen, onClose);
+    useFocusTrap({ enabled: isOpen, containerRef: panelRef, initialFocusRef: closeBtnRef });
     if (!isOpen) return null;
 
     const handleCompanionSelect = (type) => {
@@ -45,8 +50,8 @@ export default function WalkWithMeModal({ isOpen, onClose, onStartWalk }) {
     };
 
     return (
-        <div className="fixed inset-0 z-[2000] bg-black/70 flex items-end justify-center">
-            <div className="bg-bg-secondary rounded-t-3xl w-full max-w-md max-h-[85vh] overflow-hidden animate-slide-up">
+        <div className="fixed inset-0 z-[2000] bg-black/70 flex items-end justify-center" role="dialog" aria-modal="true" aria-label="Walk With Me">
+            <div ref={panelRef} className="bg-bg-secondary rounded-t-3xl w-full max-w-md max-h-[85vh] overflow-hidden animate-slide-up">
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b border-border">
                     <div className="flex items-center gap-3">
@@ -63,6 +68,9 @@ export default function WalkWithMeModal({ isOpen, onClose, onStartWalk }) {
                     <button
                         onClick={handleClose}
                         className="w-10 h-10 rounded-full bg-bg-tertiary flex items-center justify-center hover:bg-border transition-colors"
+                        type="button"
+                        aria-label="Close"
+                        ref={closeBtnRef}
                     >
                         <X className="w-5 h-5 text-text-secondary" />
                     </button>
@@ -79,6 +87,7 @@ export default function WalkWithMeModal({ isOpen, onClose, onStartWalk }) {
                         <button
                             onClick={() => handleCompanionSelect('friend')}
                             className="w-full p-4 bg-bg-primary rounded-xl flex items-center gap-4 hover:bg-bg-tertiary/50 transition-colors text-left"
+                            type="button"
                         >
                             <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
                                 <Users className="w-6 h-6 text-primary" />
@@ -94,6 +103,7 @@ export default function WalkWithMeModal({ isOpen, onClose, onStartWalk }) {
                         <button
                             onClick={() => handleCompanionSelect('security')}
                             className="w-full p-4 bg-bg-primary rounded-xl flex items-center gap-4 hover:bg-bg-tertiary/50 transition-colors text-left"
+                            type="button"
                         >
                             <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center">
                                 <Shield className="w-6 h-6 text-secondary" />
@@ -114,6 +124,7 @@ export default function WalkWithMeModal({ isOpen, onClose, onStartWalk }) {
                         <button
                             onClick={() => setStep(1)}
                             className="flex items-center gap-2 text-text-secondary text-sm mb-4 hover:text-text-primary transition-colors"
+                            type="button"
                         >
                             <ChevronRight className="w-4 h-4 rotate-180" />
                             Back to companion selection
@@ -143,6 +154,7 @@ export default function WalkWithMeModal({ isOpen, onClose, onStartWalk }) {
                                             ? 'bg-primary/20 border border-primary'
                                             : 'bg-bg-primary hover:bg-bg-tertiary/50'
                                         }`}
+                                    type="button"
                                 >
                                     <MapPin className={`w-5 h-5 ${destination?.id === dest.id ? 'text-primary' : 'text-text-muted'
                                         }`} />
@@ -167,6 +179,7 @@ export default function WalkWithMeModal({ isOpen, onClose, onStartWalk }) {
                                     ? 'bg-secondary text-white hover:bg-secondary-light'
                                     : 'bg-bg-tertiary text-text-muted cursor-not-allowed'
                                 }`}
+                            type="button"
                         >
                             <Navigation className="w-5 h-5" />
                             Start Walking

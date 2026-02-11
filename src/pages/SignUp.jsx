@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Shield, User, Mail, Lock, Eye, EyeOff, ArrowRight, Phone, IdCard } from 'lucide-react';
+import useToast from '../hooks/useToast.js';
 
 export default function SignUp({ onSignUp, onSwitchToSignIn }) {
+    const toast = useToast();
     const [isStudent, setIsStudent] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
@@ -12,11 +14,12 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
         password: '',
         confirmPassword: '',
     });
+    const formMaxWidth = 'clamp(360px, 60vw, 720px)';
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (formData.password !== formData.confirmPassword) {
-            alert('Passwords do not match');
+            toast.error('Passwords do not match');
             return;
         }
         if (onSignUp) {
@@ -59,13 +62,14 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
 
     return (
         <div style={{
-            minHeight: '100vh',
+            minHeight: '100dvh',
+            width: '100%',
             backgroundColor: 'var(--color-bg-primary)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'flex-start',
-            padding: '24px',
+            padding: 'clamp(16px, 5vw, 32px)',
             paddingTop: '48px',
             overflowY: 'auto',
         }}>
@@ -106,7 +110,7 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
             </div>
 
             {/* User Type Toggle */}
-            <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '384px', marginBottom: '20px' }}>
+            <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: formMaxWidth, marginBottom: '20px' }}>
                 <div style={{
                     backgroundColor: 'var(--color-bg-secondary)',
                     borderRadius: '12px',
@@ -163,7 +167,7 @@ export default function SignUp({ onSignUp, onSwitchToSignIn }) {
             </div>
 
             {/* Sign Up Form */}
-            <form onSubmit={handleSubmit} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '384px' }}>
+            <form onSubmit={handleSubmit} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: formMaxWidth }}>
                 {/* Full Name */}
                 <div style={{ marginBottom: '14px' }}>
                     <label style={labelStyle}>Full Name</label>

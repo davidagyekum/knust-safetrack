@@ -1,5 +1,5 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
+import { useEffect, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { KNUST_CENTER, BUS_STOPS, SHUTTLES, USER_LOCATION } from '../../data/mockData';
@@ -90,7 +90,18 @@ function RecenterMap({ center }) {
     return null;
 }
 
+function ZoomWatcher({ onZoomChange }) {
+    const map = useMapEvents({
+        zoomend: () => onZoomChange(map.getZoom()),
+    });
+    useEffect(() => {
+        onZoomChange(map.getZoom());
+    }, [map, onZoomChange]);
+    return null;
+}
+
 export default function MapContainerComponent() {
+    const [zoom, setZoom] = useState(15);
     return (
         <div className="absolute inset-0 z-0">
             <MapContainer
@@ -98,7 +109,7 @@ export default function MapContainerComponent() {
                 zoom={15}
                 className="w-full h-full"
                 zoomControl={false}
-                attributionControl={false}
+                attributionControl={true}
             >
                 {/* Dark-themed tile layer */}
                 <TileLayer
@@ -107,6 +118,7 @@ export default function MapContainerComponent() {
                 />
 
                 <RecenterMap center={[KNUST_CENTER.lat, KNUST_CENTER.lng]} />
+                <ZoomWatcher onZoomChange={setZoom} />
 
                 {/* User Location Marker */}
                 <Marker position={[USER_LOCATION.lat, USER_LOCATION.lng]} icon={userIcon}>
@@ -119,7 +131,7 @@ export default function MapContainerComponent() {
                 </Marker>
 
                 {/* Bus Stop Markers */}
-                {BUS_STOPS.map((stop) => (
+                {zoom >= 14 && BUS_STOPS.map((stop) => (
                     <Marker
                         key={stop.id}
                         position={[stop.lat, stop.lng]}
@@ -136,7 +148,7 @@ export default function MapContainerComponent() {
                 ))}
 
                 {/* Shuttle Markers */}
-                {SHUTTLES.map((shuttle) => (
+                {zoom >= 15 && SHUTTLES.map((shuttle) => (
                     <Marker
                         key={shuttle.id}
                         position={[shuttle.lat, shuttle.lng]}

@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Phone, Share2, X, Shield, Clock } from 'lucide-react';
 import { USER_LOCATION } from '../data/mockData';
+import useFocusTrap from '../hooks/useFocusTrap';
+import useToast from '../hooks/useToast.js';
 
 // User location icon for emergency mode
 const emergencyUserIcon = L.divIcon({
@@ -30,8 +32,12 @@ const emergencyUserIcon = L.divIcon({
 });
 
 export default function EmergencyMode({ onCancel }) {
+    const toast = useToast();
     const [elapsedTime, setElapsedTime] = useState(0);
     const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+    const confirmRef = useRef(null);
+    const keepBtnRef = useRef(null);
+    useFocusTrap({ enabled: showCancelConfirm, containerRef: confirmRef, initialFocusRef: keepBtnRef });
 
     // Timer for elapsed time since SOS
     useEffect(() => {
@@ -58,12 +64,12 @@ export default function EmergencyMode({ onCancel }) {
     const handleCallSecurity = () => {
         // In real app, this would initiate a phone call
         console.log('Calling KNUST Security...');
-        alert('Calling KNUST Security: +233 XX XXX XXXX');
+        toast.info('Calling KNUST Security (demo)...');
     };
 
     const handleShareLocation = () => {
         console.log('Sharing live location...');
-        alert('Live location link copied!\nShare with trusted contacts.');
+        toast.success('Live location link copied (demo).');
     };
 
     return (
@@ -96,7 +102,7 @@ export default function EmergencyMode({ onCancel }) {
                     zoom={17}
                     className="w-full h-full"
                     zoomControl={false}
-                    attributionControl={false}
+                    attributionControl={true}
                     dragging={false}
                     scrollWheelZoom={false}
                 >
@@ -158,7 +164,7 @@ export default function EmergencyMode({ onCancel }) {
             {/* Cancel Confirmation Modal */}
             {showCancelConfirm && (
                 <div className="fixed inset-0 z-[3000] bg-black/70 flex items-center justify-center p-4">
-                    <div className="bg-bg-secondary rounded-2xl p-6 w-full max-w-sm border border-border">
+                    <div ref={confirmRef} className="bg-bg-secondary rounded-2xl p-6 w-full max-w-sm border border-border" role="dialog" aria-modal="true" aria-label="Cancel SOS confirmation">
                         <h2 className="text-lg font-bold text-text-primary mb-2">Cancel SOS?</h2>
                         <p className="text-text-secondary text-sm mb-6">
                             Are you sure you want to cancel the emergency alert?
@@ -166,12 +172,15 @@ export default function EmergencyMode({ onCancel }) {
                         </p>
                         <div className="flex gap-3">
                             <button
+                                type="button"
                                 onClick={() => setShowCancelConfirm(false)}
                                 className="flex-1 py-3 bg-bg-tertiary text-text-primary font-medium rounded-xl hover:bg-border transition-colors"
+                                ref={keepBtnRef}
                             >
                                 Keep Active
                             </button>
                             <button
+                                type="button"
                                 onClick={handleConfirmCancel}
                                 className="flex-1 py-3 bg-danger text-white font-medium rounded-xl hover:bg-danger-dark transition-colors"
                             >
