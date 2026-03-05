@@ -325,6 +325,13 @@ textarea {
     overflow: hidden;
     position: relative;
   }
+
+  /* Dashboard should use full viewport, not the mobile phone frame */
+  #root > :first-child:not(.app-container) {
+    width: 100vw;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
 }
 
 /* Ensure modals are centered on all screens */

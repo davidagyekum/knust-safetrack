@@ -35,7 +35,7 @@ export default function Sidebar({
     const aside = (
         <aside
             ref={asideRef}
-            className={`${isDrawer ? 'w-72 max-w-[85vw] h-full' : 'w-48 h-screen'} bg-bg-secondary border-r border-border flex flex-col`}
+            className={`${isDrawer ? 'w-72 max-w-[85vw] h-full' : 'w-60 h-screen'} bg-bg-secondary border-r border-border flex flex-col`}
         >
             {/* Logo Header */}
             <div className="p-4 border-b border-border flex items-center justify-between gap-3">
