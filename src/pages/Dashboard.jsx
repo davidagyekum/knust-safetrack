@@ -128,32 +128,15 @@ export default function Dashboard({ onSignOut }) {
 
             case 'heatmap':
                 return (
-                    <div className="flex-1 min-h-0 flex flex-col">
-                        <div className="p-4 sm:p-6 border-b border-border">
-                            <div className="flex items-center gap-3 mb-4">
-                                <div className="w-10 h-10 bg-danger/20 rounded-full flex items-center justify-center">
-                                    <Flame className="w-5 h-5 text-danger" />
-                                </div>
-                                <div>
-                                    <h3 className="font-semibold text-text-primary">Campus Activity Heatmap</h3>
-                                    <p className="text-sm text-text-secondary">Showing incident density over the last 7 days</p>
-                                </div>
-                            </div>
-                            {/* Legend */}
-                            <div className="flex items-center gap-4 flex-wrap">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-4 h-4 rounded-full bg-secondary/60"></div>
-                                    <span className="text-xs text-text-secondary">Low Activity</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <div className="w-4 h-4 rounded-full bg-primary/60"></div>
-                                    <span className="text-xs text-text-secondary">Medium</span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <div className="w-4 h-4 rounded-full bg-danger/60"></div>
-                                    <span className="text-xs text-text-secondary">High Activity</span>
-                                </div>
-                            </div>
+                    <div className="flex-1 min-h-0 flex flex-col relative">
+                        {/* Compact legend bar overlaying the map */}
+                        <div className="bg-bg-secondary/90 backdrop-blur-sm border-b border-border px-3 py-2 flex items-center gap-3 flex-wrap z-10">
+                            <Flame className="w-4 h-4 text-danger shrink-0" />
+                            <span className="text-xs font-medium text-text-primary">Incident Density (7d)</span>
+                            <span className="text-text-muted">|</span>
+                            <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-full bg-secondary/60"></div><span className="text-[10px] text-text-secondary">Low</span></div>
+                            <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-full bg-primary/60"></div><span className="text-[10px] text-text-secondary">Med</span></div>
+                            <div className="flex items-center gap-1"><div className="w-2.5 h-2.5 rounded-full bg-danger/60"></div><span className="text-[10px] text-text-secondary">High</span></div>
                         </div>
                         <div className="flex-1 min-h-0">
                             <DashboardMap
@@ -168,28 +151,28 @@ export default function Dashboard({ onSignOut }) {
             case 'settings':
                 return (
                     <div className="flex-1 min-h-0 overflow-y-auto">
-                        <div className="p-4 sm:p-6 max-w-2xl">
+                        <div className="p-3 sm:p-4">
                             {/* Notification Settings */}
-                            <div className="bg-bg-secondary rounded-xl border border-border p-5 mb-4">
-                                <div className="flex items-center gap-3 mb-4">
-                                    <Bell className="w-5 h-5 text-primary" />
-                                    <h3 className="font-semibold text-text-primary">Notification Settings</h3>
+                            <div className="bg-bg-secondary rounded-xl border border-border p-4 mb-3">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <Bell className="w-4 h-4 text-primary" />
+                                    <h3 className="text-sm font-semibold text-text-primary">Notifications</h3>
                                 </div>
-                                <div className="space-y-4">
+                                <div className="space-y-2">
                                     {[
-                                        { label: 'SOS Alert Notifications', desc: 'Get notified when a new SOS is triggered', defaultChecked: true },
-                                        { label: 'Patrol Assignment Alerts', desc: 'Alerts for new patrol assignments', defaultChecked: true },
-                                        { label: 'System Updates', desc: 'Updates about system maintenance', defaultChecked: false },
-                                        { label: 'Sound Alerts', desc: 'Play sound for critical SOS alerts', defaultChecked: true },
+                                        { label: 'SOS Alerts', desc: 'New SOS triggered', defaultChecked: true },
+                                        { label: 'Patrol Alerts', desc: 'New assignments', defaultChecked: true },
+                                        { label: 'System Updates', desc: 'Maintenance info', defaultChecked: false },
+                                        { label: 'Sound Alerts', desc: 'Critical SOS sounds', defaultChecked: true },
                                     ].map((setting) => (
-                                        <div key={setting.label} className="flex items-center justify-between py-2">
-                                            <div>
-                                                <p className="text-sm font-medium text-text-primary">{setting.label}</p>
-                                                <p className="text-xs text-text-secondary">{setting.desc}</p>
+                                        <div key={setting.label} className="flex items-center justify-between gap-3 py-1.5">
+                                            <div className="min-w-0">
+                                                <p className="text-sm font-medium text-text-primary truncate">{setting.label}</p>
+                                                <p className="text-xs text-text-secondary truncate">{setting.desc}</p>
                                             </div>
-                                            <label className="relative inline-flex items-center cursor-pointer">
+                                            <label className="relative inline-flex items-center cursor-pointer shrink-0">
                                                 <input type="checkbox" defaultChecked={setting.defaultChecked} className="sr-only peer" />
-                                                <div className="w-11 h-6 bg-bg-tertiary rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+                                                <div className="w-9 h-5 bg-bg-tertiary rounded-full peer peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
                                             </label>
                                         </div>
                                     ))}
@@ -197,41 +180,32 @@ export default function Dashboard({ onSignOut }) {
                             </div>
 
                             {/* Security Profile */}
-                            <div className="bg-bg-secondary rounded-xl border border-border p-5 mb-4">
-                                <div className="flex items-center gap-3 mb-4">
-                                    <Shield className="w-5 h-5 text-secondary" />
-                                    <h3 className="font-semibold text-text-primary">Security Profile</h3>
+                            <div className="bg-bg-secondary rounded-xl border border-border p-4 mb-3">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <Shield className="w-4 h-4 text-secondary" />
+                                    <h3 className="text-sm font-semibold text-text-primary">Profile</h3>
                                 </div>
-                                <div className="space-y-3">
-                                    <div className="flex items-center justify-between py-2 border-b border-border">
-                                        <span className="text-sm text-text-secondary">Name</span>
-                                        <span className="text-sm font-medium text-text-primary">Security Admin</span>
-                                    </div>
-                                    <div className="flex items-center justify-between py-2 border-b border-border">
-                                        <span className="text-sm text-text-secondary">Shift</span>
-                                        <span className="text-sm font-medium text-text-primary">Night (6PM - 6AM)</span>
-                                    </div>
-                                    <div className="flex items-center justify-between py-2 border-b border-border">
-                                        <span className="text-sm text-text-secondary">Area</span>
-                                        <span className="text-sm font-medium text-text-primary">Main Campus, KNUST</span>
-                                    </div>
-                                    <div className="flex items-center justify-between py-2">
-                                        <span className="text-sm text-text-secondary">Status</span>
-                                        <span className="text-sm font-medium text-secondary">● On Duty</span>
-                                    </div>
+                                <div className="space-y-0">
+                                    {[
+                                        { key: 'Name', val: 'Security Admin' },
+                                        { key: 'Shift', val: 'Night (6PM–6AM)' },
+                                        { key: 'Area', val: 'Main Campus' },
+                                        { key: 'Status', val: '● On Duty', color: 'text-secondary' },
+                                    ].map((row, i, arr) => (
+                                        <div key={row.key} className={`flex items-center justify-between py-2 ${i < arr.length - 1 ? 'border-b border-border' : ''}`}>
+                                            <span className="text-xs text-text-secondary">{row.key}</span>
+                                            <span className={`text-xs font-medium ${row.color || 'text-text-primary'}`}>{row.val}</span>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
 
-                            {/* Danger Zone */}
-                            <div className="bg-bg-secondary rounded-xl border border-danger/30 p-5">
-                                <div className="flex items-center gap-3 mb-4">
-                                    <LogOut className="w-5 h-5 text-danger" />
-                                    <h3 className="font-semibold text-text-primary">Account</h3>
-                                </div>
+                            {/* Sign Out */}
+                            <div className="bg-bg-secondary rounded-xl border border-danger/30 p-4">
                                 <button
                                     type="button"
                                     onClick={onSignOut}
-                                    className="w-full py-3 bg-danger/10 text-danger border border-danger/30 font-medium rounded-lg hover:bg-danger/20 transition-colors"
+                                    className="w-full py-2.5 bg-danger/10 text-danger border border-danger/30 text-sm font-medium rounded-lg hover:bg-danger/20 transition-colors"
                                 >
                                     Sign Out
                                 </button>
@@ -258,7 +232,7 @@ export default function Dashboard({ onSignOut }) {
                                 </div>
 
                                 {/* Mobile: stack panel below map */}
-                                <div className="lg:hidden min-h-0 h-[45dvh]">
+                                <div className="lg:hidden min-h-0 h-[45dvh] bg-bg-secondary">
                                     <SOSAlertsPanel
                                         selectedAlertId={selectedAlert?.id}
                                         onSelectAlert={handleAlertSelect}
@@ -266,15 +240,13 @@ export default function Dashboard({ onSignOut }) {
                                 </div>
                             </div>
 
-                            {/* Desktop (xl+): docked right panel (collapsible) */}
-                            {alertsDockedOpen && (
-                                <div className="hidden xl:block w-80 min-h-0">
-                                    <SOSAlertsPanel
-                                        selectedAlertId={selectedAlert?.id}
-                                        onSelectAlert={handleAlertSelect}
-                                    />
-                                </div>
-                            )}
+                            {/* Desktop (xl+): docked right panel — always visible */}
+                            <div className="hidden xl:block w-80 min-h-0 bg-bg-secondary">
+                                <SOSAlertsPanel
+                                    selectedAlertId={selectedAlert?.id}
+                                    onSelectAlert={handleAlertSelect}
+                                />
+                            </div>
                         </div>
                     </>
                 );
@@ -328,26 +300,8 @@ export default function Dashboard({ onSignOut }) {
                         <div className="flex items-center gap-2 w-full sm:w-auto">
                             <button
                                 type="button"
-                                onClick={() => {
-                                    if (window.matchMedia('(min-width: 1280px)').matches) {
-                                        setAlertsDockedOpen((v) => !v);
-                                    } else {
-                                        setAlertsDrawerOpen(true);
-                                    }
-                                }}
-                                className="hidden lg:flex items-center gap-2 px-4 py-2 rounded-lg bg-bg-tertiary text-text-secondary hover:text-text-primary hover:bg-border transition-colors"
-                                aria-label="Toggle SOS panel"
-                            >
-                                <AlertTriangle className="w-4 h-4 text-danger" />
-                                <span className="font-medium">SOS Panel</span>
-                                <span className="ml-1 px-2 py-0.5 text-xs font-bold rounded-full bg-danger text-white">
-                                    {ACTIVE_SOS_ALERTS.length}
-                                </span>
-                            </button>
-                            <button
-                                type="button"
                                 onClick={() => setShowHeatmap(false)}
-                                className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${!showHeatmap
+                                className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm ${!showHeatmap
                                     ? 'bg-primary text-bg-primary'
                                     : 'bg-bg-tertiary text-text-secondary hover:text-text-primary'
                                     }`}
@@ -358,7 +312,7 @@ export default function Dashboard({ onSignOut }) {
                             <button
                                 type="button"
                                 onClick={() => setShowHeatmap(true)}
-                                className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${showHeatmap
+                                className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm ${showHeatmap
                                     ? 'bg-primary text-bg-primary'
                                     : 'bg-bg-tertiary text-text-secondary hover:text-text-primary'
                                     }`}
