@@ -3,9 +3,11 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
+import ForgotPassword from './pages/ForgotPassword';
 import Trips from './pages/Trips';
 import Profile from './pages/Profile';
 import Alerts from './pages/Alerts';
+import Chat from './pages/Chat';
 import './index.css';
 import useToast from './hooks/useToast.js';
 
@@ -17,6 +19,8 @@ const ROUTES = new Set([
   'dashboard',
   'signin',
   'signup',
+  'forgotpassword',
+  'chat',
 ]);
 
 function normalizeView(raw, isAuthenticated, userType) {
@@ -26,9 +30,10 @@ function normalizeView(raw, isAuthenticated, userType) {
     return isAuthenticated ? (userType === 'security' ? 'dashboard' : 'map') : 'signin';
   }
 
-  if (!isAuthenticated && view !== 'signin' && view !== 'signup') return 'signin';
+  // Allow unauthenticated access to auth pages
+  if (!isAuthenticated && view !== 'signin' && view !== 'signup' && view !== 'forgotpassword') return 'signin';
 
-  if (isAuthenticated && (view === 'signin' || view === 'signup')) {
+  if (isAuthenticated && (view === 'signin' || view === 'signup' || view === 'forgotpassword')) {
     return userType === 'security' ? 'dashboard' : 'map';
   }
 
@@ -92,6 +97,15 @@ function App() {
     window.location.hash = 'signin';
   };
 
+  // Show forgot password page
+  if (view === 'forgotpassword') {
+    return (
+      <ForgotPassword
+        onBackToSignIn={() => (window.location.hash = 'signin')}
+      />
+    );
+  }
+
   // Show sign up page
   if (view === 'signup') {
     return (
@@ -108,6 +122,7 @@ function App() {
       <SignIn
         onSignIn={handleSignIn}
         onSwitchToSignUp={() => (window.location.hash = 'signup')}
+        onSwitchToForgotPassword={() => (window.location.hash = 'forgotpassword')}
       />
     );
   }
@@ -125,6 +140,8 @@ function App() {
       return <Trips onSignOut={handleSignOut} />;
     case 'profile':
       return <Profile onSignOut={handleSignOut} />;
+    case 'chat':
+      return <Chat onSignOut={handleSignOut} />;
     case 'map':
     default:
       return <Home onSignOut={handleSignOut} />;

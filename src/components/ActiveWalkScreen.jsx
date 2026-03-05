@@ -6,6 +6,7 @@ import { Phone, X, MapPin, Clock, Shield, Users, CheckCircle } from 'lucide-reac
 import { USER_LOCATION } from '../data/mockData';
 import useFocusTrap from '../hooks/useFocusTrap';
 import useToast from '../hooks/useToast.js';
+import Portal from './layout/Portal.jsx';
 
 // User marker for active walk
 const walkUserIcon = L.divIcon({
@@ -219,31 +220,33 @@ export default function ActiveWalkScreen({ walkData, onEndWalk }) {
 
             {/* End Walk Confirmation */}
             {showEndConfirm && (
-                <div className="fixed inset-0 z-[3000] bg-black/70 flex items-center justify-center p-4">
-                    <div ref={confirmRef} className="bg-bg-secondary rounded-2xl p-6 w-full max-w-sm border border-border" role="dialog" aria-modal="true" aria-label="End walk confirmation">
-                        <h2 className="text-lg font-bold text-text-primary mb-2">End Walk?</h2>
-                        <p className="text-text-secondary text-sm mb-6">
-                            Are you sure you want to stop sharing your location?
-                        </p>
-                        <div className="flex gap-3">
-                            <button
-                                type="button"
-                                onClick={() => setShowEndConfirm(false)}
-                                className="flex-1 py-3 bg-bg-tertiary text-text-primary font-medium rounded-xl hover:bg-border transition-colors"
-                                ref={keepBtnRef}
-                            >
-                                Keep Walking
-                            </button>
-                            <button
-                                type="button"
-                                onClick={handleConfirmEnd}
-                                className="flex-1 py-3 bg-danger text-white font-medium rounded-xl hover:bg-danger-dark transition-colors"
-                            >
-                                End Walk
-                            </button>
+                <Portal>
+                    <div className="fixed inset-0 z-[3000] bg-black/70 flex items-center justify-center p-4">
+                        <div ref={confirmRef} className="bg-bg-secondary rounded-2xl p-6 w-full max-w-sm border border-border" role="dialog" aria-modal="true" aria-label="End walk confirmation">
+                            <h2 className="text-lg font-bold text-text-primary mb-2">End Walk?</h2>
+                            <p className="text-text-secondary text-sm mb-6">
+                                Are you sure you want to stop sharing your location?
+                            </p>
+                            <div className="flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowEndConfirm(false)}
+                                    className="flex-1 py-3 bg-bg-tertiary text-text-primary font-medium rounded-xl hover:bg-border transition-colors"
+                                    ref={keepBtnRef}
+                                >
+                                    Keep Walking
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleConfirmEnd}
+                                    className="flex-1 py-3 bg-danger text-white font-medium rounded-xl hover:bg-danger-dark transition-colors"
+                                >
+                                    End Walk
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </Portal>
             )}
         </div>
     );

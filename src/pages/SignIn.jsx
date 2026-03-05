@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Shield, User, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
-export default function SignIn({ onSignIn, onSwitchToSignUp }) {
+export default function SignIn({ onSignIn, onSwitchToSignUp, onSwitchToForgotPassword }) {
     const [isStudent, setIsStudent] = useState(true);
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
@@ -225,7 +225,7 @@ export default function SignIn({ onSignIn, onSwitchToSignUp }) {
 
                 {/* Forgot Password */}
                 <div style={{ textAlign: 'right', marginBottom: '24px' }}>
-                    <button type="button" style={{
+                    <button type="button" onClick={onSwitchToForgotPassword} style={{
                         background: 'none',
                         border: 'none',
                         color: 'var(--color-primary)',

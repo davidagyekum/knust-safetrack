@@ -6,6 +6,7 @@ import { Phone, Share2, X, Shield, Clock } from 'lucide-react';
 import { USER_LOCATION } from '../data/mockData';
 import useFocusTrap from '../hooks/useFocusTrap';
 import useToast from '../hooks/useToast.js';
+import Portal from './layout/Portal.jsx';
 
 // User location icon for emergency mode
 const emergencyUserIcon = L.divIcon({
@@ -163,32 +164,34 @@ export default function EmergencyMode({ onCancel }) {
 
             {/* Cancel Confirmation Modal */}
             {showCancelConfirm && (
-                <div className="fixed inset-0 z-[3000] bg-black/70 flex items-center justify-center p-4">
-                    <div ref={confirmRef} className="bg-bg-secondary rounded-2xl p-6 w-full max-w-sm border border-border" role="dialog" aria-modal="true" aria-label="Cancel SOS confirmation">
-                        <h2 className="text-lg font-bold text-text-primary mb-2">Cancel SOS?</h2>
-                        <p className="text-text-secondary text-sm mb-6">
-                            Are you sure you want to cancel the emergency alert?
-                            Security will be notified that you are safe.
-                        </p>
-                        <div className="flex gap-3">
-                            <button
-                                type="button"
-                                onClick={() => setShowCancelConfirm(false)}
-                                className="flex-1 py-3 bg-bg-tertiary text-text-primary font-medium rounded-xl hover:bg-border transition-colors"
-                                ref={keepBtnRef}
-                            >
-                                Keep Active
-                            </button>
-                            <button
-                                type="button"
-                                onClick={handleConfirmCancel}
-                                className="flex-1 py-3 bg-danger text-white font-medium rounded-xl hover:bg-danger-dark transition-colors"
-                            >
-                                Cancel SOS
-                            </button>
+                <Portal>
+                    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 3000, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+                        <div ref={confirmRef} style={{ width: '100%', maxWidth: '384px', borderRadius: '16px' }} className="bg-bg-secondary p-6 border border-border" role="dialog" aria-modal="true" aria-label="Cancel SOS confirmation">
+                            <h2 className="text-lg font-bold text-text-primary mb-2">Cancel SOS?</h2>
+                            <p className="text-text-secondary text-sm mb-6">
+                                Are you sure you want to cancel the emergency alert?
+                                Security will be notified that you are safe.
+                            </p>
+                            <div className="flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowCancelConfirm(false)}
+                                    className="flex-1 py-3 bg-bg-tertiary text-text-primary font-medium rounded-xl hover:bg-border transition-colors"
+                                    ref={keepBtnRef}
+                                >
+                                    Keep Active
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleConfirmCancel}
+                                    className="flex-1 py-3 bg-danger text-white font-medium rounded-xl hover:bg-danger-dark transition-colors"
+                                >
+                                    Cancel SOS
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </Portal>
             )}
         </div>
     );

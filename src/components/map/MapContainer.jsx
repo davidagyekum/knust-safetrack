@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 're
 import { useEffect, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { KNUST_CENTER, BUS_STOPS, SHUTTLES, USER_LOCATION } from '../../data/mockData';
+import { KNUST_CENTER, USER_LOCATION, CAMPUS_LOCATIONS } from '../../data/mockData';
 
 // Fix for default marker icons in React-Leaflet
 delete L.Icon.Default.prototype._getIconUrl;
@@ -59,27 +59,7 @@ const userIcon = L.divIcon({
     iconAnchor: [14, 14],
 });
 
-const busStopIcon = createIcon('#F4C430'); // KNUST Gold
-const shuttleIcon = L.divIcon({
-    className: 'shuttle-marker',
-    html: `
-    <div style="
-      width: 36px;
-      height: 36px;
-      background-color: #228B22;
-      border: 3px solid white;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-    ">🚌</div>
-  `,
-    iconSize: [36, 36],
-    iconAnchor: [18, 18],
-    popupAnchor: [0, -18],
-});
+const locationIcon = createIcon('#F4C430'); // KNUST Gold
 
 // Component to recenter map
 function RecenterMap({ center }) {
@@ -130,36 +110,17 @@ export default function MapContainerComponent() {
                     </Popup>
                 </Marker>
 
-                {/* Bus Stop Markers */}
-                {zoom >= 14 && BUS_STOPS.map((stop) => (
+                {/* Campus Location Markers */}
+                {zoom >= 14 && CAMPUS_LOCATIONS.map((loc) => (
                     <Marker
-                        key={stop.id}
-                        position={[stop.lat, stop.lng]}
-                        icon={busStopIcon}
+                        key={loc.id}
+                        position={[loc.lat, loc.lng]}
+                        icon={locationIcon}
                     >
                         <Popup>
                             <div>
-                                <p className="font-semibold">{stop.name}</p>
-                                <p className="text-sm text-gray-600">Bus Stop</p>
-                                <p className="text-sm text-green-600 font-medium">Next bus: 4 min</p>
-                            </div>
-                        </Popup>
-                    </Marker>
-                ))}
-
-                {/* Shuttle Markers */}
-                {zoom >= 15 && SHUTTLES.map((shuttle) => (
-                    <Marker
-                        key={shuttle.id}
-                        position={[shuttle.lat, shuttle.lng]}
-                        icon={shuttleIcon}
-                    >
-                        <Popup>
-                            <div>
-                                <p className="font-semibold">{shuttle.id}</p>
-                                <p className="text-sm text-gray-600">{shuttle.route}</p>
-                                <p className="text-sm">Next: {shuttle.nextStop}</p>
-                                <p className="text-sm text-green-600 font-medium">ETA: {shuttle.eta} min</p>
+                                <p className="font-semibold">{loc.name}</p>
+                                <p className="text-sm text-gray-600">{loc.type}</p>
                             </div>
                         </Popup>
                     </Marker>

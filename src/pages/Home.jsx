@@ -10,6 +10,7 @@ import WalkWithMeModal from '../components/WalkWithMeModal';
 import ActiveWalkScreen from '../components/ActiveWalkScreen';
 import SearchModal from '../components/SearchModal';
 import MenuDrawer from '../components/MenuDrawer';
+import AIChatBot from '../components/AIChatBot';
 
 export default function Home({ onSignOut }) {
     const [isEmergencyMode, setIsEmergencyMode] = useState(false);
@@ -71,6 +72,9 @@ export default function Home({ onSignOut }) {
 
             {/* Bottom Sheet */}
             <BottomSheet />
+
+            {/* AI Chatbot FAB */}
+            <AIChatBot />
 
             {/* SOS Button */}
             <SOSButton onActivate={handleSOSActivate} />

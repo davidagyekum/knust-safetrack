@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup, Circle, useMapEvents } from 're
 import { useEffect, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { KNUST_CENTER, BUS_STOPS, SHUTTLES } from '../../data/mockData';
+import { KNUST_CENTER } from '../../data/mockData';
 import { ACTIVE_SOS_ALERTS, PATROL_UNITS, ACTIVE_WALKS, HEATMAP_DATA } from '../../data/dashboardData';
 
 // SOS Alert icon (flashing red)
@@ -65,26 +65,6 @@ const walkIcon = L.divIcon({
   `,
     iconSize: [24, 24],
     iconAnchor: [12, 12],
-});
-
-// Bus icon
-const busIcon = L.divIcon({
-    className: 'bus-marker',
-    html: `
-    <div style="
-      width: 28px;
-      height: 28px;
-      background-color: #3B82F6;
-      border: 2px solid white;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-    ">🚌</div>
-  `,
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
 });
 
 function ZoomWatcher({ onZoomChange }) {
@@ -200,22 +180,7 @@ export default function DashboardMap({ showHeatmap = false, selectedAlert, onAle
                     </Marker>
                 ))}
 
-                {/* Shuttles */}
-                {zoom >= 14 && SHUTTLES.map((shuttle) => (
-                    <Marker
-                        key={shuttle.id}
-                        position={[shuttle.lat, shuttle.lng]}
-                        icon={busIcon}
-                    >
-                        <Popup>
-                            <div className="text-center">
-                                <p className="font-bold">{shuttle.id}</p>
-                                <p className="text-sm">{shuttle.route}</p>
-                                <p className="text-sm text-green-600">ETA: {shuttle.eta} min</p>
-                            </div>
-                        </Popup>
-                    </Marker>
-                ))}
+
             </MapContainer>
 
             {/* Map Legend */}
@@ -234,10 +199,7 @@ export default function DashboardMap({ showHeatmap = false, selectedAlert, onAle
                         <div className="w-3 h-3 bg-secondary rounded-full" />
                         <span className="text-text-secondary">Active Walk</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 bg-blue-500 rounded" />
-                        <span className="text-text-secondary">Shuttle</span>
-                    </div>
+
                 </div>
             </div>
 

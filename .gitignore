@@ -32,6 +32,13 @@ Thumbs.db
 # Markdown files (assignment docs)
 *.md
 
+# Design wireframes and images
+wireframe_*.png
+colour_scheme_*.png
+
+# Gemini/Antigravity
+.gemini/
+
 # Cache
 .cache/
 .parcel-cache/

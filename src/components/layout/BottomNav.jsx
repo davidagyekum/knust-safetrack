@@ -1,8 +1,8 @@
-import { Map, Route, Bell, User } from 'lucide-react';
+import { Map, MessageCircle, Bell, User } from 'lucide-react';
 
 const navItems = [
     { id: 'map', label: 'Map', icon: Map, hash: '#map' },
-    { id: 'trips', label: 'Trips', icon: Route, hash: '#trips' },
+    { id: 'chat', label: 'Chat', icon: MessageCircle, hash: '#chat' },
     { id: 'alerts', label: 'Alerts', icon: Bell, badge: 2, hash: '#alerts' },
     { id: 'profile', label: 'Profile', icon: User, hash: '#profile' },
 ];
