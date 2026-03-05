@@ -78,10 +78,8 @@ export default function AIChatBot() {
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="fixed z-[1500] flex items-center justify-center w-14 h-14 rounded-full shadow-lg hover:scale-105 transition-transform"
+                    className="absolute bottom-[252px] right-4 z-[1000] flex items-center justify-center w-14 h-14 rounded-full shadow-lg hover:scale-105 transition-transform"
                     style={{
-                        bottom: 'calc(64px + 160px)',
-                        right: '16px',
                         background: 'linear-gradient(135deg, #38BDF8, #818CF8)',
                         boxShadow: '0 4px 20px rgba(56, 189, 248, 0.4)',
                     }}
