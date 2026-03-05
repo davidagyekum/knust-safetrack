@@ -221,7 +221,7 @@ export default function ActiveWalkScreen({ walkData, onEndWalk }) {
             {/* End Walk Confirmation */}
             {showEndConfirm && (
                 <Portal>
-                    <div className="fixed inset-0 z-[3000] bg-black/70 flex items-center justify-center p-4">
+                    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 3000, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
                         <div ref={confirmRef} className="bg-bg-secondary rounded-2xl p-6 w-full max-w-sm border border-border" role="dialog" aria-modal="true" aria-label="End walk confirmation">
                             <h2 className="text-lg font-bold text-text-primary mb-2">End Walk?</h2>
                             <p className="text-text-secondary text-sm mb-6">
